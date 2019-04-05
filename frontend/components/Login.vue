@@ -1,26 +1,40 @@
 <template>
-  <div class="login">
-    <div class="top-bar">Review for You</div>
-    <img src="../assets/logo.png" width="250px">
-    <h2>Login</h2>
-    <input
-      type="text"
-      v-model="email"
-      placeholder="Email address"
-      class="input"
-      required>
-    <br/>
-    <input
-      type="password"
-      v-model="password"
-      placeholder="Password"
-      class="input"
-      required>
-    <br/><br/>
-    <button v-on:click="login" class="button">Enter</button>
-    <p><router-link to="/signup">
-      New Here? Create a new account
-    </router-link></p>
+
+  <div class="container-start">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <a class="navbar-brand" href="#">Review4You</a>
+    </nav>
+
+    <div class="container">
+
+     <div class="row">
+       <div class="col-12">
+         <div class="page-header">
+           <h1 id="theme">Default</h1><br><br>
+           <p id="description" class="lead"><h2>Login</h2></p>
+
+           <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" v-model="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" v-model="password" placeholder="Password" required>
+          </div>
+
+           <button type="button" class="btn btn-primary" v-on:click="login">Enter</button><br><br>
+           <p><router-link to="/signup">
+             New Here? Create a new account
+           </router-link></p>
+
+         </div>
+       </div>
+     </div>
+
+   </div>
+
   </div>
 </template>
 
@@ -46,29 +60,6 @@
   }
 </script>
 
-<style scoped>
-.top-bar{
-  background-color: #566DC8;
-  color: white;
-  text-align: left;
-  font-size: 20px;
-  
-  padding-bottom: 5px;
-  padding-top: 5px;
-  padding-left: 10px;
-  margin-bottom: 30px;
-}
-
-.button{
-  background-color: #1E90FF; /* Blue */
-  border: none;
-  color: white;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  border-radius: 3px;
-}
-
+<style>
+@import '../assets/bootstrap.css';
 </style>
