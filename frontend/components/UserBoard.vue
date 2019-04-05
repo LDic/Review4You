@@ -11,7 +11,7 @@
           <input type = "file" id="file" ref="file" v-on:change="handleFileUpload()"/>
         </label>
         <button class="btn-submit" v-on:click="submitFile()">Submit</button>
-        <button class="btn-start" v-on:click="gotoSearch()">Start</button>
+        <button class="btn-start" v-on:click="gotoSummary()">Start</button>
     </div>
 
   </div>
@@ -48,7 +48,7 @@ export default {
         formData.append('file', this.file);
 
         /* make the request to the POST , single-file URL */
-        axios.post('/single-file', formData,
+        axios.post('/fileupload', formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -69,14 +69,14 @@ export default {
     },
 
     /* handles exception when file not uploaded */
-    gotoSearch(){
+    gotoSummary(){
       if(document.getElementById("file").value == ""){
         /* if not file uploaded */
         alert("WARNING: file not uploaded!");
       }
       else{
         /* go to SummaryPage */
-        window.location.pathname = '/summary'
+        this.$router.replace('/summary')
       }
     },
   }

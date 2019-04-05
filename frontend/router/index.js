@@ -7,6 +7,8 @@ import UserBoard from '../components/UserBoard'
 import Login from '../components/Login'
 import SignUp from '../components/SignUp'
 import Summary from '../components/Summary'
+import Start from '../components/Start'
+import Search from '../components/Search'
 
 Vue.use(Router)
 
@@ -14,7 +16,8 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      name: 'Start',
+      component: Start
     },
     {
       path: '/login',
@@ -38,6 +41,14 @@ let router = new Router({
       path: '/summary',
       name: 'Summary',
       component: Summary,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: Search,
       meta: {
         requiresAuth: true
       }
