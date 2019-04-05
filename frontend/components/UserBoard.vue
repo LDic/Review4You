@@ -1,20 +1,48 @@
 <template>
-  <div class="userboard">
-    <div class="top-bar">
-      Review for You
-      <button class="button" v-on:click="logout">Logout</button>
-    </div>
-    <img src="../assets/logo.png" width="250px">
 
-    <div class = "cell">
-        <label class="bglabel-file"><span class="label-file"></span>
-          <input type = "file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-        </label>
-        <button class="btn-submit" v-on:click="submitFile()">Submit</button>
-        <button class="btn-start" v-on:click="gotoSummary()">Start</button>
-    </div>
+  <div class="container-start">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <a class="navbar-brand" href="#">Review4You</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+     </button>
+
+     <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <button type="button" class="btn btn-outline-success" v-on:click="logout">Logout</button>
+          </li>
+        </ul>
+      </div>
+
+    </nav>
+
+    <div class="container">
+
+     <div class="row">
+       <div class="col-12">
+         <div class="page-header">
+           <h1 id="theme">Default</h1><br><br>
+           <p id="description" class="lead"><h2>Start analyzing</h2></p>
+
+           <label for="exampleInputFile">File input</label><br>
+           <label class="bglabel-file"><span class="label-file"></span>
+             <input type = "file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+           </label>
+
+           <button type="button" class="btn btn-success" v-on:click="submitFile()">Upload</button>
+           <button type="button" class="btn btn-primary" v-on:click="gotoSummary()">Start</button><br>
+           <small id="fileHelp" class="form-text text-muted">If you have review data file, its form must be csv file. After choose file, upload and then check summary result.</small>
+
+         </div>
+       </div>
+     </div>
+
+   </div>
 
   </div>
+
 </template>
 
 <script>
@@ -85,65 +113,10 @@ export default {
 </script>
 
 <style scoped>
+@import '../assets/bootstrap.css';
+
 #file{
   border-style: solid;
-  color: black;
+  color: gray;
 }
-
-.top-bar{
-  background-color: #566DC8;
-  color: white;
-  text-align: left;
-  font-size: 20px;
-
-  padding-bottom: 10px;
-  padding-top: 5px;
-  padding-left: 10px;
-  padding-right: 5px;
-  margin-bottom: 30px;
-}
-
-.button{
-  background-color: Transparent;
-  border-color: white;
-  border-style: solid;
-  color: white;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  border-radius: 3px;
-  float: right;
-}
-
-.cell{
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.btn-submit{
-  background-color: #008CBA; /* Blue */
-  border: none;
-  color: white;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  border-radius: 3px;
-}
-
-.btn-start{
-  background-color: #f44336; /* Red */
-  border: none;
-  color: white;
-  padding: 5px 14px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  border-radius: 3px;
-}
-
 </style>

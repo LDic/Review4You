@@ -1,28 +1,42 @@
 <template>
-  <div class="sign-up">
-    <div class="top-bar">Review for You</div>
-    <img src="../assets/logo.png" width="250px">
-    <h3>Create a new account</h3>
-    <input
-      v-model="email"
-      type="text"
-      class="input"
-      placeholder="Email"
-      required>
-    <br>
-    <input
-      v-model="password"
-      type="password"
-      class="input"
-      placeholder="Password"
-      required>
-    <br><br>
-    <button v-on:click="signUp" class="button-signUp">Sign Up</button>
-    <button class="button-back">
-      <router-link to="/login" class="link-back">
-        Back
-      </router-link>
-    </button>
+
+  <div class="container-start">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <a class="navbar-brand" href="#">Review4You</a>
+    </nav>
+
+    <div class="container">
+
+     <div class="row">
+       <div class="col-12">
+         <div class="page-header">
+           <h1 id="theme">Default</h1><br><br>
+           <p id="description" class="lead"><h2>Create a new account</h2></p>
+
+           <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" v-model="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" v-model="password" placeholder="Password" required>
+          </div>
+
+           <button type="button" class="btn btn-primary" v-on:click="signup">Sign up</button>
+           <button type="button" class="btn btn-success">
+             <router-link to="/login" class="link-back">
+             Back
+            </router-link>
+          </button>
+
+         </div>
+       </div>
+     </div>
+
+   </div>
+
   </div>
 </template>
 
@@ -48,38 +62,6 @@
   }
 </script>
 
-<style scoped>
-.top-bar{
-  background-color: #566DC8;
-  color: white;
-  text-align: left;
-  font-size: 20px;
-
-  padding-bottom: 5px;
-  padding-top: 5px;
-  padding-left: 10px;
-  margin-bottom: 30px;
-}
-
-.button-signUp, .button-back{
-  background-color: #1E90FF; /* Blue */
-  border: none;
-  color: white;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  border-radius: 3px;
-}
-
-.button-back{
-  background-color: red;
-}
-
-.link-back{
-  text-decoration: none;
-  color: white;
-}
-
+<style>
+@import '../assets/bootstrap.css';
 </style>

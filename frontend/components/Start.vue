@@ -1,16 +1,33 @@
 <template>
   <div class="container-start">
-    <div class="main-txt">
-      <h2>Review4You</h2>
-      <div>
-        <div class="sub-txt">
-          If you have review lists in csv file, we analyze your reviews<br>
-          based on 4 aspects: Sentiment, Intent, Emotion, Keyword.<br>
-          Please login, and enjoy our premier service.<br>
-        </div>
-        <p><button class="btn-login" v-on:click="login()">Get Started</button></p>
-      </div>
-    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <a class="navbar-brand" href="#">Review4You</a>
+    </nav>
+
+    <div class="container">
+
+     <div class="row">
+       <div class="col-12">
+         <div class="page-header">
+           <h1 id="theme">Default</h1><br><br>
+           <p id="description" class="lead"><h2>Welcome to Review4You</h2></p>
+
+           <div>
+             We analyze your reviews
+             based on 4 aspects: <a href="#">Sentiment, Intent, Emotion, Keyword.</a><br>
+             Please login, and enjoy our premier service.<br>
+           </div><br>
+
+           <div class="bs-example">
+             <button type="button" class="btn btn-primary" v-on:click="login()">Get Started</button>
+           </div>
+         </div>
+       </div>
+     </div>
+
+   </div>
+
   </div>
 </template>
 
@@ -28,3 +45,7 @@
 
     }
 </script>
+
+<style>
+@import '../assets/bootstrap.css';
+</style>
