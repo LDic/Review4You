@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from 'firebase'
 
-import HelloWorld from '@/components/HelloWorld'
 import UserBoard from '../components/UserBoard'
 import Login from '../components/Login'
 import SignUp from '../components/SignUp'
