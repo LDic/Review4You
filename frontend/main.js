@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import BootstrapVue from 'bootstrap-vue'
 import VueFire from 'vuefire'
 import firebase from 'firebase/app'
 import axios from 'axios'
@@ -10,6 +11,7 @@ import axios from 'axios'
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
+Vue.use(BootstrapVue)
 Vue.use(VueFire)
 Vue.use(axios)
 
@@ -23,6 +25,10 @@ var config = {
     messagingSenderId: "480067445894"
   };
 firebase.initializeApp(config);
+
+// bootstrap
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 /* eslint-disable no-new */
 new Vue({
