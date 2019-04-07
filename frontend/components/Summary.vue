@@ -24,6 +24,116 @@
            <h1 id="theme">Default</h1><br><br>
            <p id="description" class="lead"><h2>Summary of your review</h2></p>
 
+           <h5>Total number of reviews
+             <small class="text-success">1980 reviews</small>
+           </h5>
+
+           <h5>Average rating
+            <small class="text-success">3.46</small>
+           </h5>
+
+           <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col" colspan="2">Emotion</th>
+                <th scope="col" colspan="2">Intent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-active">
+                <td>Happy</td>
+                <td>10%</td>
+                <td>Compliment</td>
+                <td>20%</td>
+              </tr>
+              <tr class="table-active">
+                <td>Angry</td>
+                <td>13%</td>
+                <td>Suggestion</td>
+                <td>20%</td>
+              </tr>
+              <tr class="table-active">
+                <td>Interested</td>
+                <td>12%</td>
+                <td>Question</td>
+                <td>20%</td>
+              </tr>
+              <tr class="table-active">
+                <td>Sad</td>
+                <td>20%</td>
+                <td>Spam</td>
+                <td>20%</td>
+              </tr>
+              <tr class="table-active">
+                <td>Disappointed</td>
+                <td>11%</td>
+                <td>Complaint</td>
+                <td>20%</td>
+              </tr>
+              <tr class="table-active">
+                <td>Unsatisfied</td>
+                <td>20%</td>
+              </tr>
+              <tr class="table-active">
+                <td>Satisfied</td>
+                <td>14%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <br><br>
+
+          <div class="card border-secondary mb-3" style="max-width: 20rem;">
+            <div class="card-header">The most frequent keywords</div>
+            <div class="card-body">
+              <p class="card-text">
+                <table class="table table-hover">
+                  <tbody>
+                    <tr class="table-dark">
+                      <th scope="row">1st</th>
+                      <td>Good design</td>
+                    </tr>
+                    <tr class="table-dark">
+                      <th scope="row">2nd</th>
+                      <td>small size</td>
+                    </tr>
+                    <tr class="table-dark">
+                      <th scope="row">3rd</th>
+                      <td>portable</td>
+                    </tr>
+                    <tr class="table-dark">
+                      <th scope="row">4th</th>
+                      <td>difficult instructions</td>
+                    </tr>
+                    <tr class="table-dark">
+                      <th scope="row">5th</th>
+                      <td>hard to open</td>
+                    </tr>
+                    <tr class="table-dark">
+                      <th scope="row">6th</th>
+                      <td>great</td>
+                    </tr>
+                    <tr class="table-dark">
+                      <th scope="row">7th</th>
+                      <td>expensive</td>
+                    </tr>
+                    <tr class="table-dark">
+                      <th scope="row">8th</th>
+                      <td>unique color</td>
+                    </tr>
+                    <tr class="table-dark">
+                      <th scope="row">9th</th>
+                      <td>not worth</td>
+                    </tr>
+                    <tr class="table-dark">
+                      <th scope="row">10th</th>
+                      <td>useless</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </p>
+            </div>
+          </div>
 
          </div>
        </div>
@@ -49,7 +159,7 @@ export default{
         this.$router.replace('login')
       })
     },
-    
+
     gotoSearch(){
       // go to search Page
       this.$router.replace('search')
