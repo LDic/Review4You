@@ -1,9 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
+var multer = require('multer');
 
 var path = require('path');
+var upload = multer({dest: 'uploads/'});
 router.use(bodyParser.urlencoded({extended: false}));
+
+// import libraries
+var fileLib = require('../lib/fileHandling');
 
 /** Home Page */
 router.get(['/', '/start'], function(req, res, next) {
@@ -17,7 +22,7 @@ router.get(['/', '/start'], function(req, res, next) {
   }
 });
 
-router.get('/dashboard', function(req, res, next)
+router.get('/userboard', function(req, res, next)
 {
   if(!req.session.bIsLogined)
   {
@@ -73,6 +78,16 @@ router.post('/search', function(req, res, next)
     res.redirect('/');
     return false;
   }
+});
+
+router.post('/fileupload', upload.single('file'), function(req, res, next)
+{
+  // get new file
+  var data = req.file;
+  res.send('');
+
+  // remove previous file
+  fileLib.removePreviousFile(data.filename, 'uploads');
 });
 
 module.exports = router;
