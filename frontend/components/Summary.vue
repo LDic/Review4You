@@ -10,7 +10,8 @@
      <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <button type="button" class="btn btn-outline-success" v-on:click="logout">Logout</button>
+            <button type="button" class="btn btn-outline-success" v-on:click="logout()">Logout</button>
+            <button type="button" class="btn btn-outline-warning" v-on:click="gotoSearch()">Search</button>
           </li>
         </ul>
       </div>
@@ -145,6 +146,8 @@
 </template>
 
 <script>
+import firebase from 'firebase'
+
 export default{
   name: 'app',
   data() {
@@ -154,7 +157,7 @@ export default{
   },
 
   methods: {
-    logout () {
+    logout() {
       firebase.auth().signOut().then(() => {
         this.$router.replace('login')
       })

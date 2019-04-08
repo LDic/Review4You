@@ -7,13 +7,16 @@ import BootstrapVue from 'bootstrap-vue'
 import VueFire from 'vuefire'
 import firebase from 'firebase/app'
 import axios from 'axios'
+import VueAxios from 'vue-axios'
+import ReactiveSearch from '@appbaseio/reactivesearch-vue'
 
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
 Vue.use(VueFire)
-Vue.use(axios)
+Vue.use(VueAxios, axios)
+Vue.use(ReactiveSearch)
 
 // initialize firebase
 var config = {
