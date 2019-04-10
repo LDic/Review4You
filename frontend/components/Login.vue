@@ -3,7 +3,7 @@
   <div class="container-start">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-      <a class="navbar-brand" href="#">Review4You</a>
+      <a class="navbar-brand" id="a_home" v-on:click="gotoStart()">Review4You</a>
     </nav>
 
     <div class="container">
@@ -11,7 +11,7 @@
      <div class="row">
        <div class="col-12">
          <div class="page-header">
-           <h1 id="theme">Default</h1><br><br>
+           <h2 id="theme">Default</h2><br><br>
            <p id="description" class="lead"><h2>Login</h2></p>
 
            <div class="form-group">
@@ -55,11 +55,20 @@
         }).catch((err) => {
           alert(err.message)
         })
+      },
+
+      gotoStart() {
+        this.$router.replace('/')
       }
     }
   }
 </script>
 
 <style>
-@import '../assets/bootstrap.css';
+@import 'bootstrap.css';
+
+#a_home{
+  color: white;
+}
+
 </style>

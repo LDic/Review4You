@@ -2,7 +2,7 @@
 <div class="container-start">
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-    <a class="navbar-brand" href="#">Review4You</a>
+    <a class="navbar-brand" id="a_home" v-on:click="gotoHome()">Review4You</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -21,7 +21,7 @@
     <div class="row">
       <div class="col-12">
         <div class="page-header">
-          <h1 id="theme">Default</h1><br><br>
+          <h2 id="theme">Default</h2><br><br>
 
           <div>
             <reactive-base app="entity" url="https://search-marketingai-r3lttgjomhivagmtod5fxknibm.ap-northeast-2.es.amazonaws.com">
@@ -105,13 +105,17 @@ export default {
 </script>
 
 <style scoped>
-@import '../assets/bootstrap.css';
+@import 'bootstrap.css';
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+#a_home{
+  color: white;
 }
 
 .result-list-container {
@@ -145,6 +149,10 @@ export default {
   background: #eee;
   margin: 10px auto;
   width: 90%;
+  border-style: solid;
+  border-color: #58C68F;
+  border-radius: 5px;
+  border-width: thick;
 }
 
 .product-title {

@@ -2,7 +2,7 @@
   <div class="container-start">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-      <a class="navbar-brand" href="#">Review4You</a>
+      <a class="navbar-brand" id="a_home" v-on:click="gotoHome()">Review4You</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
        <span class="navbar-toggler-icon"></span>
      </button>
@@ -22,7 +22,7 @@
      <div class="row">
        <div class="col-12">
          <div class="page-header">
-           <h1 id="theme">Default</h1><br><br>
+           <h2 id="theme">Default</h2><br><br>
            <p id="description" class="lead"><h2>Summary of your review</h2></p>
 
            <h5>Total number of reviews
@@ -198,6 +198,10 @@ export default{
 </script>
 
 <style scoped>
-@import '../assets/bootstrap.css';
+@import 'bootstrap.css';
+
+#a_home{
+  color: white;
+}
 
 </style>
