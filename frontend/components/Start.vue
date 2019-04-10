@@ -3,7 +3,7 @@
   <div class="container-start" id="start-only">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-      <a class="navbar-brand" href="#">Review4You</a>
+      <a class="navbar-brand" id="a_home" v-on:click="gotoStart()">Review4You</a>
     </nav>
 
     <div class="container">
@@ -11,7 +11,7 @@
      <div class="row">
        <div class="col-12">
          <div class="page-header">
-           <h1 id="theme">Default</h1><br><br>
+           <h2 id="theme">Default</h2><br><br>
              <p id="description" class="lead"><font color="white">
                <h2>Welcome to Review4You</h2></font>
              </p>
@@ -34,8 +34,8 @@
    </div>
 
    <div class="bottom-space">
-     <h3>Developers</h3>
-     <h5>Team: My melody</h5>
+     <h3 id="bottom-title">Developers</h3>
+     <h5 id="bottom-title">Team: My melody</h5>
      <li>Model: SeungYup Seon</li>
      <li>Backend & ElasticSearch: MyungSeon Kim</li>
      <li>Frontend: Eungyeong Kim</li>
@@ -54,6 +54,10 @@
       methods: {
         login() {
           this.$router.replace('/login')
+        },
+
+        gotoStart(){
+          this.$router.replace('/')
         }
       }
 
@@ -61,7 +65,15 @@
 </script>
 
 <style scoped>
-@import '../assets/bootstrap.css';
+@import 'bootstrap.css';
+
+#bottom-title{
+  color: #918C8C;
+}
+
+#a_home{
+  color: white;
+}
 
 .container-start{
   background-image: url("https://images.unsplash.com/photo-1549299513-83dceea1f48b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1954&q=80");
