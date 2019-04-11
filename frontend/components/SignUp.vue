@@ -25,10 +25,8 @@
           </div>
 
            <button type="button" class="btn btn-primary" v-on:click="signup">Sign up</button>
-           <button type="button" class="btn btn-success">
-             <router-link to="/login" class="link-back">
+           <button type="button" class="btn btn-success" v-on:click="goBackToLogin()">      <!-- 수정 !-->
              Back
-            </router-link>
           </button>
 
          </div>
@@ -53,14 +51,19 @@
     methods: {
       signUp () {
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((user) => {
-          this.$router.replace('/login')
+          //this.$router.replace('/auth/login')
+          window.location.pathname = '/auth/login'
         }).catch((err) => {
           alert(err.message)
         });
       },
 
       gotoStart() {
-        this.$router.replace('/')
+        //this.$router.replace('/')
+        window.location.pathname = '/'
+      },
+      goBackToLogin() { // 추가됨
+        window.location.pathname = '/auth/login'
       }
     }
   }

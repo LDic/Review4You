@@ -60,9 +60,14 @@ export default {
 
   methods: {
     logout() {
-      firebase.auth().signOut().then(() => {
-        this.$router.replace('login')
-      })
+      if(confirm('Do you want to Logout?')){
+        firebase.auth().signOut()
+        .then(() => {
+          this.$http.post('/auth/logout')
+        }).then((res) => {
+          this.$router.replace('/')
+        })
+      }
     },
 
     submitFile() {
@@ -101,12 +106,14 @@ export default {
         alert("WARNING: file not uploaded!");
       } else {
         /* go to SummaryPage */
-        this.$router.replace('/summary')
+        //this.$router.replace('/summary')
+        window.location.pathname = '/summary'
       }
     },
 
     gotoHome() {
-      this.$router.replace('userboard')
+      //this.$router.replace('/userboard')
+      window.location.pathname = '/userboard'
     }
   }
 

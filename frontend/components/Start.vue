@@ -53,11 +53,13 @@
 
       methods: {
         login() {
-          this.$router.replace('/login')
+          //this.$router.replace('/auth/login')
+          window.location.pathname = '/auth/login'
         },
 
         gotoStart(){
-          this.$router.replace('/')
+          //this.$router.replace('/')
+          window.location.pathname = '/'
         }
       }
 

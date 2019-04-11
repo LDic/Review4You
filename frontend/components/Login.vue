@@ -25,7 +25,7 @@
           </div>
 
            <button type="button" class="btn btn-primary" v-on:click="login">Enter</button><br><br>
-           <p><router-link to="/signup">
+           <p><router-link to="/auth/signup">
              New Here? Create a new account
            </router-link></p>
 
@@ -50,15 +50,23 @@
     },
     methods: {
       login () {
-        firebase.auth().signInWithEmailAndPassword(this.email, this.password).then((user) => {
-          this.$router.replace('/userboard')
-        }).catch((err) => {
-          alert(err.message)
+        firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        .then((user) => {
+          this.axios.post('/auth/login-firebase', {
+          email: this.email
         })
+        .then((res) => {
+          //this.$router.replace('/userboard')
+          window.location.pathname = '/userboard'
+        })
+      }).catch((err) => {
+        alert(err.message)
+      })
       },
 
       gotoStart() {
-        this.$router.replace('/')
+        //this.$router.replace('/')
+        window.location.pathname = '/'
       }
     }
   }
