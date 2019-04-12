@@ -10,12 +10,22 @@ router.use(bodyParser.urlencoded({extended: false}));
 
 // import libraries
 var fileLib = require('../lib/fileHandling');
+var esLib = require('../lib/elasticsearch');
+
+// get result from model and search data
+var resultData;
+
+/** ElasticSearch */
+var client = new elasticsearch.Client({
+  host: '<elasticsearch domain>',
+  //log: 'trace'
+});
 
 /** Home Page */
 router.get(['/', '/start'], function(req, res, next) {
   if(req.session.bIsLogined) // login already
   {
-    res.redirect('/dashboard');
+    res.redirect('/userboard');
   }
   else
   {
@@ -57,6 +67,7 @@ router.post('/summary', function(req, res, next) // POST summary page
   }
   console.log('post summary page');
   // Show Summary
+  showSummary(req, res);
 });
 
 router.get('/search', function(req, res, next)  // GET search page
@@ -79,6 +90,7 @@ router.post('/search', function(req, res, next)
     res.redirect('/');
     return false;
   }
+  res.send(req.session.loginAccount);
 });
 
 router.post('/fileupload', upload.single('file'), function(req, res, next)
@@ -100,6 +112,14 @@ router.post('/summary/getresult', function(req, res)
     return false;
   }
   // send data to frontend
+  res.json({
+    totalreviews: resultData['totalreviews'],
+    ratings: resultData['ratings'],
+    sentiment: resultData['sentimentSummary'],
+    emotion: resultData['emotionSummary'],
+    intent: resultData['intentSummary'],
+    keywordCloud: resultData['keywordSummary']
+  });
 });
 
 // ShowSummary
@@ -118,7 +138,7 @@ async function showSummary(req, res)
     // send file to model
     var userEmail = req.session.loginAccount;
     var spawn = require("child_process").spawn;
-    var process = spawn('python', ['./testmodel.py', currentPath+'/'+datafile, req.session.loginAccount]);  //python3
+    var process = spawn('python3', ['./testmodel.py', currentPath+'/'+datafile, req.session.loginAccount]);  //python3
     var fileName;
     process.stdout.on('data', function(data) {
         fileName = data.toString();
@@ -127,8 +147,35 @@ async function showSummary(req, res)
       // remove previous result json files
       fileLib.removePreviousFile(fileName.slice(0, -1), 'result_jsons');
       // delete current elasticsearch data and insert, search
-      var filePath = path.join('../result_jsons', 'test.json'); //path.join('../', fileName).slice(0, -1);
+      var filePath = path.join('../', fileName).slice(0, -1);
       var resultFile = require(filePath);
+      console.log('before deletion');
+      client.deleteByQuery({
+        index: 'entity',
+        body: esLib.getDataQuery(userEmail)
+      }, async function(delerr, delres) {
+        console.log('deletion complete');
+        await client.bulk({
+          refresh: "wait_for",
+          body: resultFile
+        }, async function(err, bulkres, status)
+        {
+          console.log('insert complete');
+          if(err) {console.log('resultFile put error!'), console.log(err);}
+          else  
+          {
+            client.search({
+              index: 'entity',
+              body: esLib.getSearchQuery(userEmail)
+            }, function(searcherr, searchres) {
+              console.log('search complete');
+              /** send data to frontend */
+              resultData = esLib.createResultJson(searchres);
+              res.send('');
+            });
+          }
+        });
+      });
     });
     process.stdin.end(); 
   });

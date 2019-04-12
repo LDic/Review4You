@@ -23,7 +23,7 @@ router.get('/login', function(req, res, next) // GET login page
   console.log('login page');
 });
 
-router.post('/login', function(req, res, next)
+router.post('/login-firebase', function(req, res, next)
 {
   req.session.bIsLogined = true;
   req.session.loginAccount = req.body.email;
@@ -48,8 +48,14 @@ router.post('/logout', function(req, res)
 });
 
 /** Register Page */
-router.get('/register', function(req, res, next)  // GET register page
+router.get('/signup', function(req, res, next)  // GET register page
 {
+  // Access control
+  if(req.session.bIsLogined)
+  {
+    res.redirect('/userboard');
+    return false;
+  }
   res.sendFile(path.join(__dirname, '../public', 'index.html'));
   console.log('register page');
   //res.render('register');
