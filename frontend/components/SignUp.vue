@@ -12,17 +12,24 @@
        <div class="col-12">
          <div class="page-header">
            <h2 id="theme">Default</h2><br><br>
-           <p id="description" class="lead"><h2>Create a new account</h2></p>
+           <p id="description" class="lead"><h2 id="black-title">Create a new account</h2></p>
 
            <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" v-model="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+            <input v-model="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="user@example.com" required>
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
           </div>
+
           <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" v-model="password" placeholder="Password" required>
+            <input v-model="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter password" required>
           </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Confirm Password</label>
+            <input v-model="password_confirmation" type="password" class="form-control" id="exampleInputPassword2" placeholder="Confirm your password" required>
+            <small id="emailHelp" class="form-text text-muted">Check your password again!</small>
+          </div>
+
 
            <button type="button" class="btn btn-primary" v-on:click="signup">Sign up</button>
            <button type="button" class="btn btn-success" v-on:click="goBackToLogin()">      <!-- 수정 !-->
@@ -45,11 +52,14 @@
     data () {
       return {
         email: '',
-        password: ''
+        password: '',
+        password_confirmation: '',
       }
     },
     methods: {
       signUp () {
+      
+        /* 오빠 원래 코드
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((user) => {
           //this.$router.replace('/auth/login')
           window.location.pathname = '/auth/login'
@@ -57,8 +67,25 @@
           alert(err.message)
         });
       },
+      */
 
+      // 내가 추가 및 변경한 부분
+        if(this.password === this.password_confirmation && this.password.length >0){
+          firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((user) => {
+            window.confirm("Congratulations!")
+            this.$router.replace('/login')
+          }).catch((err) => {
+            alert(err.message)
+          });
+        } else{
+          this.password = ""
+          this.password_confirmation=""
+          return alert("Password do not match")
+        }
+      },
+      
       gotoStart() {
+
         //this.$router.replace('/')
         window.location.pathname = '/'
       },
@@ -71,8 +98,15 @@
 
 <style>
 @import 'bootstrap.css';
-
 #a_home{
   color: white;
+}
+
+#white-title{
+  color: white;
+}
+
+#black-title{
+  color: black;
 }
 </style>
