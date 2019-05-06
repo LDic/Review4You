@@ -30,11 +30,10 @@
             <small id="emailHelp" class="form-text text-muted">Check your password again!</small>
           </div>
 
-           <button type="button" class="btn btn-primary" v-on:click="signUp">Sign up</button>
-           <button type="button" class="btn btn-success">
-             <router-link to="/login" class="link-back" id="white-title">
+
+           <button type="button" class="btn btn-primary" v-on:click="signup">Sign up</button>
+           <button type="button" class="btn btn-success" v-on:click="goBackToLogin()">      <!-- 수정 !-->
              Back
-            </router-link>
           </button>
 
          </div>
@@ -59,7 +58,18 @@
     },
     methods: {
       signUp () {
+      
+        /* 오빠 원래 코드
+        firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((user) => {
+          //this.$router.replace('/auth/login')
+          window.location.pathname = '/auth/login'
+        }).catch((err) => {
+          alert(err.message)
+        });
+      },
+      */
 
+      // 내가 추가 및 변경한 부분
         if(this.password === this.password_confirmation && this.password.length >0){
           firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((user) => {
             window.confirm("Congratulations!")
@@ -73,10 +83,15 @@
           return alert("Password do not match")
         }
       },
+      
       gotoStart() {
-        this.$router.replace('/')
-      },
 
+        //this.$router.replace('/')
+        window.location.pathname = '/'
+      },
+      goBackToLogin() { // 추가됨
+        window.location.pathname = '/auth/login'
+      }
     }
   }
 </script>

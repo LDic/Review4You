@@ -12,6 +12,7 @@ import Search from '../components/Search'
 Vue.use(Router)
 
 let router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -19,42 +20,43 @@ let router = new Router({
       component: Start
     },
     {
-      path: '/login',
+      path: '/auth/login',
       name: 'Login',
       component: Login
     },
     {
-      path: '/signup',
+      path: '/auth/signup',
       name: 'SignUp',
       component: SignUp
     },
     {
       path: '/userboard',
       name: 'UserBoard',
-      component: UserBoard,
-      meta: {
-        requiresAuth: true
-      }
+      component: UserBoard
+      //meta: {
+      //  requiresAuth: true
+      //}
     },
     {
       path: '/summary',
       name: 'Summary',
-      component: Summary,
-      meta: {
-        requiresAuth: true
-      }
+      component: Summary
+      //meta: {
+      //  requiresAuth: true
+      //}
     },
     {
       path: '/search',
       name: 'Search',
-      component: Search,
-      meta: {
-        requiresAuth: true
-      }
+      component: Search
+      //meta: {
+      //  requiresAuth: true
+      //}
     },
   ]
 })
 
+/*
 router.beforeEach((to, from, next) => {
   let currentUser = firebase.auth().currentUser
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
@@ -63,5 +65,6 @@ router.beforeEach((to, from, next) => {
   else if (!requiresAuth && currentUser) next('userboard')
   else next()
 })
+*/
 
 export default router

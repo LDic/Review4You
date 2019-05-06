@@ -81,13 +81,20 @@ export default {
 
   methods: {
     logout() {
-      firebase.auth().signOut().then(() => {
-        this.$router.replace('login')
-      })
+      if(confirm('Do you want to Logout?')){
+        firebase.auth().signOut()
+        .then(() => {
+          this.$http.post('/auth/logout')
+        }).then((res) => {
+          //this.$router.replace('/')
+          window.location.pathname = '/'
+        })
+      }
     },
 
     gotoHome() {
-      this.$router.replace('userboard')
+      //this.$router.replace('/userboard')
+      window.location.pathname = '/userboard'
     },
 
     customQuery: function() {

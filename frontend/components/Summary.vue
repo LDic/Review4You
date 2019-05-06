@@ -158,20 +158,27 @@ export default{
 
   methods: {
     logout() {
-      firebase.auth().signOut().then(() => {
-        this.$router.replace('login')
-      })
+      if(confirm('Do you want to Logout?')){
+        firebase.auth().signOut()
+        .then(() => {
+          this.$http.post('/auth/logout')
+        }).then((res) => {
+          //this.$router.replace('/')
+          window.location.pathname = '/'
+        })
+      }
     },
 
     gotoSearch(){
       // go to search Page
-      this.$router.replace('search')
+      //this.$router.replace('/search')
+      window.location.pathname = '/search'
     },
 
     bringResults(){
-      this.axios.post('http://localhost:3000/summary')
+      this.axios.post('/summary')
       .then( (res) => {
-        this.axios.post('http://localhost:3000/summary/getresult')
+        this.axios.post('/summary/getresult')
         .then((resultRes) => {
           this.summaryResult = resultRes.data
         })
@@ -179,7 +186,8 @@ export default{
     },
 
     gotoHome() {
-      this.$router.replace('userboard')
+      //this.$router.replace('/userboard')
+      window.location.pathname = '/userboard'
     },
 
     ratio_sentiment: function(sent) {
