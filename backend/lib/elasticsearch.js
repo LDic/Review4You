@@ -10,10 +10,18 @@ module.exports.getDataQuery = function(userEmail)
     };
 }
 
-// Get a ES search query from certain userEmail
-module.exports.getSearchQuery = function(userEmail)
+// Get a ES search query from certain userEmail and certain sentiment summary
+module.exports.getSentKeyCloudQuery = function(userEmail)
 {
-    return {
+    return [
+      {},
+      {query : {bool: {must: [{ match: { userID: userEmail } }, { match: { "summary.sentiment": "positive"} }]}}, size:0, aggs: {keyWordCloud: {terms: {field: "keyword", order: {_count: "desc"}}}}},
+      {},
+      {query : {bool: {must: [{ match: { userID: userEmail } }, { match: { "summary.sentiment": "neutral"} }]}}, size:0, aggs: {keyWordCloud: {terms: {field: "keyword", order: {_count: "desc"}}}}},
+      {},
+      {query : {bool: {must: [{ match: { userID: userEmail } }, { match: { "summary.sentiment": "negative"} }]}}, size:0, aggs: {keyWordCloud: {terms: {field: "keyword", order: {_count: "desc"}}}}},
+      {},
+      {
         query: {
             match: {
               userID: userEmail
@@ -51,7 +59,8 @@ module.exports.getSearchQuery = function(userEmail)
               }
           }
         }
-    };
+      }
+    ];
 }
 
 // Create result json file to send to frontend
