@@ -6,9 +6,6 @@ var multer = require('multer');
 var fs = require('fs');
 
 var path = require('path');
-var cheerio = require('cheerio');
-var request = require('request');
-var iconv  = require('iconv-lite');
 var upload = multer({dest: 'uploads/'});
 router.use(bodyParser.urlencoded({extended: false}));
 
@@ -66,7 +63,6 @@ router.get('/summary', function(req, res, next)  // GET summary page
     return false;
   }
   console.log('summary page');
-  req.session.bIsSummaryDone = false;
   req.session.save();
   res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
@@ -174,15 +170,6 @@ router.post('/upload_url', function(req, res)
   req.session.save();
   ScrapeReviews(req.session.uploadurl.substr(39, 11), req, 1);
 
-  /*
-  request.get({url: req.session.uploadurl}, function(err, resp, body) {
-    var $ = cheerio.load(body);
-    var result = $('.a-size-medium.totalReviewCount')
-    console.log(result.children);
-    console.log(result.text());
-    //console.log($('.a-size-medium totalReviewCount'));
-  });
-  */
   res.send('');
 });
 
@@ -216,7 +203,8 @@ async function ScrapeReviews(asin, req, i) {
     page: 'https://www.amazon.com/product-reviews/'+asin+'/ref=cm_cr_arp_d_paging_btm_next_/'+i+'?ie=UTF8&reviewerType=all_reviews&pageNumber='+i,
     elements: {
       productTitie: '.product-title',
-      reviewBlock: '.review'
+      reviewBlock: '.review',
+      author: '.a-profile-name'
     }
   })
   .then((result) => {
@@ -229,7 +217,7 @@ async function ScrapeReviews(asin, req, i) {
         reviewstream.write(JSON.stringify(result.reviews[index]));
         //scrapeResult.push(result.reviews[index]);
       }
-      ScrapeReviews(asin, req, i+100);
+      ScrapeReviews(asin, req, i+1);
     }
     else {
       req.session.bIsScrapingDone = true;
@@ -240,7 +228,6 @@ async function ScrapeReviews(asin, req, i) {
     console.log(err);
   });
 }
-
 
 // ShowSummary
 async function showSummary(req, res, bIsURLSummary)
