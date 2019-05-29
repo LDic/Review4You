@@ -18,7 +18,7 @@
 
              <div><font color="white">
                We analyze your reviews
-               based on 3 aspects: <a href="#"><strong>Intent, Emotion, Keyword.</strong></a><br>
+               based on 4 aspects: <strong>Sentiment, Intent, Emotion, Keyword.</strong><br>
                <p>You can check overview of your reviews in Summary page.<br>
                Also, you can search your reviews based on your preference at Search page.</p>
                <p>Please login, and enjoy our premier service.</p></font>
@@ -68,15 +68,12 @@
 
 <style scoped>
 @import 'bootstrap.css';
-
 #bottom-title{
   color: #918C8C;
 }
-
 #a_home{
   color: white;
 }
-
 .container-start{
   background-image: url("https://images.unsplash.com/photo-1549299513-83dceea1f48b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1954&q=80");
   height: 500px;
@@ -84,11 +81,9 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
-
 .bottom-space{
   margin-left: 80px;
   margin-top: 200px;
   margin-bottom: 50px;
 }
-
 </style>

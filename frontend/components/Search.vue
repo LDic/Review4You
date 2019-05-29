@@ -10,7 +10,7 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <button type="button" class="btn btn-outline-success" v-on:click="logout">Logout</button>
+          <button type="button" class="btn btn-danger" v-on:click="logout">Logout</button>
         </li>
       </ul>
     </div>
@@ -20,33 +20,34 @@
 
     <div class="row">
       <div class="col-12">
-        <div class="page-header">
+        <div class="page-header" v-if="user_name.length!=0">
           <h2 id="theme">Default</h2><br><br>
 
           <div>
             <reactive-base app="entity" url="https://search-marketingai-r3lttgjomhivagmtod5fxknibm.ap-northeast-2.es.amazonaws.com">
 
               <div class="filters-container">
-                <single-list componentId="UserInfo" dataField="userID" title="Choose your ID" class="filter" />
-                <data-search componentId="SearchKeyword" dataField="keyword" title="Search Keyword" class="filter" :customQuery="this.customQuery" />
-                <multi-list componentId="Emotion" dataField="summary.emotion" class="filter" title="Select Emotion" selectAllLabel="All emotions" />
-                <multi-list componentId="Intent" dataField="summary.intent" class="filter" title="Select Intent" selectAllLabel="All intents" />
+                <data-search componentId="SearchKeyword" dataField="keyword" title="Search Keyword" class="filter" />
+                <multi-list componentId="Sentiment" dataField="summary.sentiment" class="filter" title="Select Sentiment" selectAllLabel="All sentiments" :defaultQuery="this.defaultQuery" />
+                <multi-list componentId="Emotion" dataField="summary.emotion" class="filter" title="Select Emotion" selectAllLabel="All emotions" :defaultQuery="this.defaultQuery" />
+                <multi-list componentId="Intent" dataField="summary.intent" class="filter" title="Select Intent" selectAllLabel="All intents" :defaultQuery="this.defaultQuery" />
               </div>
 
-
-              <reactive-list componentId="SearchResult" dataField="productID" className="result-list-container" :pagination="true" :from="0" :size="5" :react="{ and: ['Emotion', 'Intent','SearchKeyword','UserInfo']}">
+              <reactive-list componentId="SearchResult" dataField="productID" className="result-list-container" :pagination="true" :from="0" :size="5" :react="{ and: ['Sentiment', 'Emotion', 'Intent','SearchKeyword']}" :defaultQuery="this.defaultQuery">
                 <div slot="renderData" slot-scope="{ item }" class="border-review">
                   <div class="review-header">
-                    <div class="product-title">{{item.productID}}</div>
+                    <div class="product-title">{{item.title}}</div>
                   </div>
                   <div class="bar-summary">
+                    <span class="sub-title">Sentiment:</span>
+                    <span class="member">{{item.summary.sentiment}}</span>
                     <span class="sub-title">Emotion:</span>
                     <span class="member">{{item.summary.emotion}}</span>
                     <span class="sub-title">Intent:</span>
                     <span class="member">{{item.summary.intent}}</span>
                   </div>
                   <div class="review-content">{{item.content}}</div>
-                  <div class="review-url">{{item.url}}</div><br>
+                  <div class="review-url"><a :href="item.url">Click here! product URL</a></div><br>
                 </div>
               </reactive-list>
             </reactive-base>
@@ -72,10 +73,12 @@ export default {
       user_name: ''
     }
   },
+
   created() {
-    this.axios.post('/summary')
+    this.axios.post('/search')
       .then((res) => {
         this.user_name = res.data
+        //console.log(res.data)
       })
   },
 
@@ -97,15 +100,16 @@ export default {
       window.location.pathname = '/userboard'
     },
 
-    customQuery: function() {
+    defaultQuery: function(value, props) {
+      //console.log('default query')
       return {
         query: {
           match: {
-            userID: this.user_name,
+            userID: this.user_name
           }
         }
       }
-    },
+    }
 
   },
 }
@@ -113,18 +117,15 @@ export default {
 
 <style scoped>
 @import 'bootstrap.css';
-
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
-
-#a_home{
+#a_home {
   color: white;
 }
-
 .result-list-container {
   width: 70%;
   position: absolute;
@@ -137,7 +138,6 @@ export default {
   scroll-behavior: smooth;
   transition: all ease 0.2s;
 }
-
 .filters-container {
   width: 30%;
   display: inline-flex;
@@ -150,7 +150,6 @@ export default {
   justify-content: center;
   transition: all ease 0.2s;
 }
-
 .filter {
   padding: 10px;
   background: #eee;
@@ -161,33 +160,27 @@ export default {
   border-radius: 5px;
   border-width: thick;
 }
-
 .product-title {
   font-weight: bold;
   font-size: 18px;
   margin-bottom: 10px;
   padding-top: 10px;
-  color: white;
+  color: black;
 }
-
 .border-review {
   border-bottom-style: outset;
 }
-
 .sub-title {
-  color: white;
+  color: black;
 }
-
 .member {
   margin-right: 4px;
   color: green;
 }
-
 .review-url {
   color: #40A3D5;
 }
-
-.review-content{
+.review-content {
   color: #95AAB4;
 }
 </style>

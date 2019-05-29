@@ -10,7 +10,8 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <button type="button" class="btn btn-outline-danger" v-on:click="logout">Logout</button>
+          <button type="button" class="btn btn-danger" v-on:click="logout">Logout</button>
+          <button type="button" class="btn btn-success" v-on:click="gotoSearch()">Search</button>
         </li>
       </ul>
     </div>
@@ -37,7 +38,7 @@
             <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" />
           </label>
 
-          <button type="button" class="btn btn-success" v-on:click="submitFile()">Upload</button>
+          <button type="button" class="btn btn-success" v-on:click="submitFile()">Submit</button>
           <button type="button" class="btn btn-primary" v-on:click="gotoSummary()">Start</button><br>
           <small id="fileHelp" class="form-text text-muted">If you have review data file, its form must be csv file. After choose file, upload and then check summary result.</small>
 
@@ -48,10 +49,16 @@
             <span class="opt-content">Product URL</span>
           </div>
 
-          <label for="exampleInputFile" style="font-weight: lighter">Input product url in Amazon website</label><br>
-          <input type="text" class="form-control" placeholder="product url" id="inputDefault" style="width: 50%" v-model="post_url">
-          <button type="button" class="btn btn-success" id="url-btn" v-on:click="submitURL()">Submit</button>
-          <button type="button" class="btn btn-primary" v-on:click="gotoSummary2()">Start</button>
+          <label for="exampleInputFile" style="font-weight: lighter">Amazon website URL starts as 'https://www.amazon.com/product-reviews/'</label><br>
+          <input type="text" class="form-control" placeholder="https://www.amazon.com/product-reviews/[asin code]" id="inputDefault" style="width: 50%" v-model="post_url">
+          <button type="button" class="btn btn-success" id="url-btn" v-on:click="submitURL()" v-if="is_spinner() == 0">Submit</button>
+          <b-button variant="primary" disabled style="margin-top:4px;" v-if="is_spinner() == 1">
+             <b-spinner small></b-spinner>
+             Loading...
+           </b-button>
+
+
+          <button type="button" class="btn btn-primary" v-on:click="gotoSummary2()" v-if="is_start() == 1">Start</button>
           <small id="fileHelp" class="form-text text-muted">You can simply do review analysis. Just copy and paste url in Amazon.</small>
           <small id="fileHelp" class="text-danger" style="color: black">Warning! Getting data from url may take time!</small>
           <br><br>
@@ -67,6 +74,7 @@
 <script>
 import firebase from 'firebase'
 import axios from 'axios'
+import Vue from 'vue'
 
 export default {
   name: 'app',
@@ -74,9 +82,32 @@ export default {
     return {
       file: '',
       post_url: '',
+      ready_start: 0,
+      start_spinner: 0, //initial value must be '0',
+      polling: null,
+      is_progress_end: 0,
     }
   },
   methods: {
+    pollData() {
+      this.polling = setInterval( () => {
+        axios.post('/upload_status')
+        .then((upload_status) => {
+          this.is_progress_end = upload_status.data;
+          if(this.is_progress_end == '0'){
+            this.ready_start = 0;
+          }
+          if(this.is_progress_end == '1'){
+            this.start_spinner = 1;
+            this.ready_start = 0;
+          }
+          if(this.is_progress_end == '2'){
+            this.start_spinner = 0;
+            this.ready_start = 1;
+          }
+        })
+      }, 1500)
+    },
     logout() {
       if(confirm('Do you want to Logout?')){
         firebase.auth().signOut()
@@ -121,27 +152,78 @@ export default {
       } else {
         /* go to SummaryPage */
         //this.$router.replace('/summary')
-        window.location.pathname = '/summary'
+        axios.post('/before_summary', {
+          bIsURLSummary: false
+        }).then(res => {
+          window.location.pathname = '/summary'
+        })
       }
     },
     gotoSummary2() {
       // go to progress hompage, finally SummaryPage
-
+      axios.post('/before_summary', {
+        bIsURLSummary: true
+      }).then(res => {
+        window.location.pathname = '/summary'
+      })
     },
-
     gotoHome() {
-
       //this.$router.replace('/userboard')
       window.location.pathname = '/userboard'
-    }
-  }
-
-    submitURL() {
-      axios.post('/upload_url', {
-        body: this.post_url
-      })
-      .then(response => {})
     },
+    gotoSearch() {
+      // go to search Page
+      window.location.pathname = '/search'
+    },
+    submitURL() {
+      /*
+      axios.get(this.post_url)
+      .then(res => {
+        console.log(res)
+        console.log(res.req.document.getElementsByClassName('a-size-medium totalReviewCount').value)
+      })
+      */
+      if(this.post_url.includes('https://www.amazon.com/product-reviews/') && this.post_url.length == 49) {
+        this.ready_start = 0
+        axios.post('/upload_url', {
+          body: this.post_url
+        })
+        .then(response => {
+            this.start_spinner = 1
+        })
+      } else {
+        alert("Warning: URL form is not valid")
+      }
+    },
+
+    is_start() {
+      return (this.ready_start)
+    },
+    is_spinner() {
+      return(this.start_spinner)
+    },
+  },
+
+  beforeDestroy() {
+    clearInterval(this.polling)
+  },
+  created() {
+    this.pollData()
+    axios.post('/upload_status')
+    .then((upload_status) => {
+      this.is_progress_end = upload_status.data;
+      if(this.is_progress_end == '0'){
+        this.ready_start = 0;
+      }
+      if(this.is_progress_end == '1'){
+        this.start_spinner = 1;
+        this.ready_start = 0;
+      }
+      if(this.is_progress_end == '2'){
+        this.start_spinner = 0;
+        this.ready_start = 1;
+      }
+    })
   }
 }
 </script>
@@ -150,29 +232,30 @@ export default {
 @import 'bootstrap.css';
 @import url('https://fonts.googleapis.com/css?family=Bree+Serif');
 
-#a_home{
+#a_home {
   color: white;
 }
+
 #file {
   border-style: solid;
   color: gray;
 }
 
-#black-title{
+#black-title {
   margin-top: 30px;
   color: black;
 }
 
-#url-btn{
+#url-btn {
   margin-top: 4px;
 }
 
-.option{
+.option {
   margin-top: 40px;
   margin-bottom: 15px;
 }
 
-.opt-title{
+.opt-title {
   font-weight: bold;
   color: #6CC5DC;
   margin-right: 10px;
@@ -180,7 +263,13 @@ export default {
   font-family: 'Bree Serif', serif;
 }
 
-.opt-content{
+.opt-content {
   font-family: 'Bree Serif', serif;
+}
+</style>
+
+<style lang="scss" scoped>
+.md-progress-bar{
+  margin: 24px;
 }
 </style>

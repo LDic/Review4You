@@ -31,7 +31,7 @@
           </div>
 
 
-           <button type="button" class="btn btn-primary" v-on:click="signup">Sign up</button>
+           <button type="button" class="btn btn-primary" v-on:click="signUp">Sign up</button>
            <button type="button" class="btn btn-success" v-on:click="goBackToLogin()">      <!-- 수정 !-->
              Back
           </button>
@@ -53,27 +53,15 @@
       return {
         email: '',
         password: '',
-        password_confirmation: '',
+        password_confirmation: ''
       }
     },
     methods: {
       signUp () {
-      
-        /* 오빠 원래 코드
-        firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((user) => {
-          //this.$router.replace('/auth/login')
-          window.location.pathname = '/auth/login'
-        }).catch((err) => {
-          alert(err.message)
-        });
-      },
-      */
-
-      // 내가 추가 및 변경한 부분
         if(this.password === this.password_confirmation && this.password.length >0){
           firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((user) => {
             window.confirm("Congratulations!")
-            this.$router.replace('/login')
+            window.location.pathname = '/auth/login'
           }).catch((err) => {
             alert(err.message)
           });
@@ -83,9 +71,8 @@
           return alert("Password do not match")
         }
       },
-      
-      gotoStart() {
 
+      gotoStart() {
         //this.$router.replace('/')
         window.location.pathname = '/'
       },
@@ -101,11 +88,9 @@
 #a_home{
   color: white;
 }
-
 #white-title{
   color: white;
 }
-
 #black-title{
   color: black;
 }

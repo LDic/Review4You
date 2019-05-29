@@ -12,7 +12,7 @@
        <div class="col-12">
          <div class="page-header">
            <h2 id="theme">Default</h2><br><br>
-           <p id="description" class="lead"><h2>Login</h2></p>
+           <p id="description" class="lead"><h2 id="black-title">Login</h2></p>
 
            <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
@@ -24,7 +24,7 @@
             <input type="password" class="form-control" id="exampleInputPassword1" v-model="password" placeholder="Password" required>
           </div>
 
-           <button type="button" class="btn btn-primary" v-on:click="login">Enter</button><br><br>
+           <button type="button" class="btn btn-primary" v-on:click="login">Login</button><br><br>
            <p><router-link to="/auth/signup">
              New Here? Create a new account
            </router-link></p>
@@ -74,9 +74,10 @@
 
 <style>
 @import 'bootstrap.css';
-
 #a_home{
   color: white;
 }
-
+#black-title{
+  color: black;
+}
 </style>
