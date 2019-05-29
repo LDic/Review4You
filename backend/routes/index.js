@@ -10,9 +10,6 @@ var upload = multer({dest: 'uploads/'});
 router.use(bodyParser.urlencoded({extended: false}));
 
 
-var reviewsCrawler = require('amazon-reviews-crawler')
-var reviewstream = fs.createWriteStream('./scrape/reviewresult.json', {flags: 'a'});
-
 // import libraries
 var fileLib = require('../lib/fileHandling');
 var esLib = require('../lib/elasticsearch');
@@ -21,8 +18,6 @@ var esLib = require('../lib/elasticsearch');
 var resultFile;
 var resultData;
 var bIsURLSummary;
-var total_review; //a-size-medium totalReviewCount
-var cur_scrape_page;
 
 /** ElasticSearch test */
 var client = new elasticsearch.Client({
@@ -129,7 +124,7 @@ router.post('/fileupload', upload.single('file'), function(req, res, next)
   res.send('');
 
   // remove previous file
-  fileLib.removePreviousFile(data.filename, 'uploads');
+  fileLib.removePreviousFile(data.filename, 'uploads/'+req.session.loginAccount);
 });
 
 // recieve result data from model
@@ -168,7 +163,7 @@ router.post('/upload_url', function(req, res)
   req.session.bIsScrapingDone = false;
   console.log(req.session.uploadurl.substr(39, 11));
   req.session.save();
-  ScrapeReviews(req.session.uploadurl.substr(39, 11), req, 1);
+  ScrapeReviews(req.session.uploadurl.substr(39, 11), req);
 
   res.send('');
 });
@@ -197,7 +192,37 @@ router.post('/summary_status', function(req, res)
   res.send(req.session.bIsSummaryDone);
 });
 
+/*
+reviewsCrawler({
+  page: 'https://www.amazon.com/product-reviews/B000068NVI/ref=cm_cr_arp_d_paging_btm_next_/1?ie=UTF8&reviewerType=all_reviews&pageNumber=1',
+  userAgent: 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0',
+  elements: {
+    productTitie: '.product-title',
+    reviewBlock: '.review',
+    author: '.a-profile-name'
+  }
+}).then((result) => {
+  console.log('done');
+});
+*/
+
 // scrape review from url
+function ScrapeReviews(asin, req) {
+  var scrapefileName;
+  var spawn = require("child_process").spawn;
+  var process = spawn('python', ['./amazon_crawler.py', asin, req.session.loginAccount]);  //python3
+  process.stdout.on('data', function(data) {
+    scrapefileName = data.toString();
+  });
+  process.stdout.on('end', function() {
+    fileLib.removePreviousFile(scrapefileName.slice(0, -2), 'scrape_result/'+req.session.loginAccount);
+    console.log('url scraping has been finished!');
+    req.session.bIsScrapingDone = true;
+    req.session.save();
+  });
+}
+//Scrape('B0781Z7Y3S');
+/*
 async function ScrapeReviews(asin, req, i) {
   await reviewsCrawler(asin, {
     page: 'https://www.amazon.com/product-reviews/'+asin+'/ref=cm_cr_arp_d_paging_btm_next_/'+i+'?ie=UTF8&reviewerType=all_reviews&pageNumber='+i,
@@ -210,6 +235,8 @@ async function ScrapeReviews(asin, req, i) {
   .then((result) => {
     console.log(i);
     cur_scrape_page = i;
+    var scrapeFilePath = path.join(__dirname, '../scrape/'+req.session.loginAccount+'-scraperesult.json');
+    reviewstream = fs.createWriteStream(scrapeFilePath, {flags: 'a'});
     
     if(result.reviews.length > 0) {
       for(var index in result.reviews)
@@ -228,13 +255,13 @@ async function ScrapeReviews(asin, req, i) {
     console.log(err);
   });
 }
-
+*/
 // ShowSummary
 async function showSummary(req, res, bIsURLSummary)
 {
   var currentPath;
   if(!bIsURLSummary) {currentPath = path.join(__dirname, '../uploads');}
-  else {currentPath = path.join(__dirname, '../scrape');}
+  else {currentPath = path.join(__dirname, '../scrape_result/'+req.session.loginAccount);}
   console.log(currentPath);
   fs.readdir(currentPath, function(err, files)
   {
@@ -284,11 +311,14 @@ async function showSummary(req, res, bIsURLSummary)
               var maxkeywordNumber = 5;
               for(var i = 0; i < 3; i++)
               {
+                var count = 0;
                 for(var i2 in searchres.responses[i].aggregations.keyWordCloud.buckets)
                 {
                   if(i2 > maxkeywordNumber-1) {break;}  // Maximum
                   resultData['sentKeyCloud'].push(searchres.responses[i].aggregations.keyWordCloud.buckets[i2].key);
+                  count++;
                 }
+                for(var i2 = 0; i2 < maxkeywordNumber-count; i2++) {resultData['sentKeyCloud'].push("");}
               }
               //console.log(resultData);
               //console.log(resultData['sentKeyCloud']);

@@ -13,7 +13,7 @@ module.exports.removePreviousFile = function(currentFileName, delPath)
     {
       for(var i in files)
       {
-        if(files[i] != currentFileName && files[i] != 'test.json')// except current file / remove 'test.json' condition later(this is just only for test)
+        if(files[i] != currentFileName)// except current file / remove 'test.json' condition later(this is just only for test)
         {
           fs.unlink(currentPath+'/'+files[i], function(err)
           {

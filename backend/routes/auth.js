@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
 var bodyParser = require('body-parser');
 var bkfd2Password = require('pbkdf2-password');
 var hasher = bkfd2Password();
@@ -9,7 +8,7 @@ var path = require('path');
 
 router.use(bodyParser.urlencoded({extended: false}));
 
-/** MySQL */
+/** MySQL *
 var sqlconn = mysql.createConnection({
   host : 'marketingaidb.csiociym4gut.us-west-1.rds.amazonaws.com',
   user : 'root',
@@ -17,6 +16,7 @@ var sqlconn = mysql.createConnection({
   database : 'account'
 });
 sqlconn.connect();
+*/
 
 /** redirect to login */
 router.get('/', function(req, res, next) {

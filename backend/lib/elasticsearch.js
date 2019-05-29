@@ -73,7 +73,7 @@ module.exports.createResultJson = function(searchres)
   resultData['ratings'] = searchres.aggregations['ratingSummary'].value;
   var dataList = ['sentimentSummary', 'emotionSummary', 'intentSummary'];  // to get empty data
   dataList['sentimentSummary'] = ['positive', 'neutral', 'negative'];
-  dataList['emotionSummary'] = ['happy', 'angry', 'interested', 'sad', 'disappointed', 'unsatisfied', 'satisfied'];
+  dataList['emotionSummary'] = ['happy', 'angry', 'sad', 'hate', 'unsatisfied', 'satisfied'];
   dataList['intentSummary'] = ['spam', 'question', 'complaint', 'suggestion', 'compliment'];
   // create json file to send to frontend
   for(var i in searchres.aggregations)
