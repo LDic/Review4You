@@ -124,7 +124,7 @@ router.post('/fileupload', upload.single('file'), function(req, res, next)
   res.send('');
 
   // remove previous file
-  fileLib.removePreviousFile(data.filename, 'uploads/'+req.session.loginAccount);
+  fileLib.removePreviousFile(data.filename, 'uploads');
 });
 
 // recieve result data from model
@@ -160,7 +160,7 @@ router.post('/upload_url', function(req, res)
   console.log(req.body.body);
 
   req.session.uploadurl = req.body.body;
-  req.session.bIsScrapingDone = false;
+  req.session.bIsScraping = '0';
   console.log(req.session.uploadurl.substr(39, 11));
   req.session.save();
   ScrapeReviews(req.session.uploadurl.substr(39, 11), req);
@@ -177,7 +177,7 @@ router.post('/upload_status', function(req, res)
     res.redirect('/');
     return false;
   }
-  res.send(req.session.bIsScrapingDone);
+  res.send(req.session.bIsScraping);
 });
 
 // Response for summary status
@@ -209,6 +209,8 @@ reviewsCrawler({
 // scrape review from url
 function ScrapeReviews(asin, req) {
   var scrapefileName;
+  req.session.bIsScraping = '1';
+  req.session.save();
   var spawn = require("child_process").spawn;
   var process = spawn('python', ['./amazon_crawler.py', asin, req.session.loginAccount]);  //python3
   process.stdout.on('data', function(data) {
@@ -217,7 +219,7 @@ function ScrapeReviews(asin, req) {
   process.stdout.on('end', function() {
     fileLib.removePreviousFile(scrapefileName.slice(0, -2), 'scrape_result/'+req.session.loginAccount);
     console.log('url scraping has been finished!');
-    req.session.bIsScrapingDone = true;
+    req.session.bIsScraping = '2';
     req.session.save();
   });
 }
@@ -275,7 +277,7 @@ async function showSummary(req, res, bIsURLSummary)
     // send file to model
     var userEmail = req.session.loginAccount;
     var spawn = require("child_process").spawn;
-    var process = spawn('python', ['./testmodel.py', currentPath+'/'+datafile, req.session.loginAccount]);  //python3
+    var process = spawn('python', [path.join(__dirname, '../testmodel.py'), currentPath+'/'+datafile, req.session.loginAccount]);  //python3
     var fileName;
     process.stdout.on('data', function(data) {
         fileName = data.toString();

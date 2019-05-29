@@ -93,6 +93,8 @@ router.post('/logout', function(req, res)
   }
   delete req.session.bIsLogined;
   delete req.session.loginAccount;
+  delete req.session.bIsScraping;
+  delete req.session.bIsSummaryDone;
   req.session.save(function() {
     res.redirect('/');
   });
