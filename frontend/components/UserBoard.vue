@@ -49,18 +49,19 @@
             <span class="opt-content">Product URL</span>
           </div>
 
-          <label for="exampleInputFile" style="font-weight: lighter">Amazon website URL starts as 'https://www.amazon.com/product-reviews/'</label><br>
-          <input type="text" class="form-control" placeholder="https://www.amazon.com/product-reviews/[asin code]" id="inputDefault" style="width: 50%" v-model="post_url">
+          <label for="exampleInputFile" style="font-weight: lighter">Amazon website URL started as 'https://www.amazon.com/'</label><br>
+          <input type="text" class="form-control" placeholder="https://www.amazon.com/~" id="inputDefault" style="width: 50%" v-model="post_url">
           <button type="button" class="btn btn-success" id="url-btn" v-on:click="submitURL()" v-if="is_spinner() == 0">Submit</button>
           <b-button variant="primary" disabled style="margin-top:4px;" v-if="is_spinner() == 1">
              <b-spinner small></b-spinner>
              Loading...
-           </b-button>
+          </b-button>
 
 
           <button type="button" class="btn btn-primary" v-on:click="gotoSummary2()" v-if="is_start() == 1">Start</button>
           <small id="fileHelp" class="form-text text-muted">You can simply do review analysis. Just copy and paste url in Amazon.</small>
           <small id="fileHelp" class="text-danger" style="color: black">Warning! Getting data from url may take time!</small>
+          <small id="fileHelp" class="text-danger" style="color: black; padding-left: 10px;">Notice: Only url in Amazon.com is available</small><br>
           <br><br>
         </div>
       </div>
@@ -183,16 +184,43 @@ export default {
         console.log(res.req.document.getElementsByClassName('a-size-medium totalReviewCount').value)
       })
       */
-      if(this.post_url.includes('https://www.amazon.com/product-reviews/') && this.post_url.length == 49) {
-        this.ready_start = 0
+      if(this.post_url.includes('https://www.amazon.com/')){
+        var strArray = this.post_url.split('/')
+        var temp = "";
+        var temp2= "";
+  
+        for(var i=0; i<strArray.length; i++){
+          temp = strArray[i]
+          if(temp.indexOf('?') == -1){
+            // there's no '?' in this string
+            if(temp.length == 10){
+              // find product
+              this.post_url = temp
+              break
+            }else{
+              continue
+            }
+          }else{
+            //there is '?' in this string
+            var temp_arr = temp.split('?',1)
+            if(temp_arr[0].length == 10){
+              // find product
+              this.post_url = temp_arr[0]
+              break
+            }
+          }
+        }
+
         axios.post('/upload_url', {
           body: this.post_url
         })
         .then(response => {
-            this.start_spinner = 1
+          this.start_spinner = 1
         })
-      } else {
-        alert("Warning: URL form is not valid")
+
+        this.ready_start = 0
+      }else{
+        alert('Warning: this url is not Amazon url')
       }
     },
 

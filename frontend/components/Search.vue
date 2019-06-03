@@ -11,6 +11,7 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
           <button type="button" class="btn btn-danger" v-on:click="logout">Logout</button>
+          <button type="button" class="btn btn-success" v-if="is_summarydone() == 1" v-on:click="gotoSummary()">Summary</button>
         </li>
       </ul>
     </div>
@@ -70,15 +71,16 @@ export default {
   name: 'app',
   data() {
     return {
-      user_name: ''
+      user_name: '',
+      bissummarydone: 0
     }
   },
 
   created() {
     this.axios.post('/search')
       .then((res) => {
-        this.user_name = res.data
-        //console.log(res.data)
+        this.user_name = res.data[0]
+        if(res.data[1] != null) {this.bissummarydone = 1}
       })
   },
 
@@ -109,6 +111,13 @@ export default {
           }
         }
       }
+    },
+
+    gotoSummary(){
+      window.location.pathname = '/summary'
+    },
+    is_summarydone() {
+      return (this.bissummarydone)
     }
 
   },
