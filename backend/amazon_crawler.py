@@ -27,8 +27,11 @@ asin = sys.argv[1]#'B000068NVI'
 
 # get total page
 url_total = 'https://www.amazon.com/product-reviews/'+str(asin)
-res_total = requests.get(url_total, headers=reqheader)
-html_total = res_total.text
+html_total = ''
+while True:
+    res_total = requests.get(url_total, headers=reqheader)
+    html_total = res_total.text
+    if html_total.find('total-review-count') > 0: break
 html_total = html_total[html_total.find('total-review-count')-17:html_total.find('totalReviewCount')+100]
 soup_total = BeautifulSoup(html_total, 'html.parser')
 totalpage = int(soup_total.find('span', {'data-hook': "total-review-count"}).text.replace(',', ''))
@@ -42,8 +45,11 @@ result = []
 for i in range(1, int(totalpage/10)+2):
     url = 'https://www.amazon.com/product-reviews/'+str(asin)+'/ref=cm_cr_arp_d_paging_btm_next_/'+str(i)+'?ie=UTF8&reviewerType=all_reviews&pageNumber='+str(i)
     #print(i)
-    res = requests.get(url, headers=reqheader)
-    html = res.text
+    html = ''
+    while True:
+        res = requests.get(url, headers=reqheader)
+        html = res.text
+        if html.find('cm_cr-review_list') > 0: break
     html = html[html.find('cm_cr-review_list')-9:html.find('a-spinner-wrapper reviews-load-progess aok-hidden a-spacing-top-large')-12]
     soup = BeautifulSoup(html, 'html.parser')
     reviewList = soup.find_all('div', {'data-hook':"review"})
@@ -51,7 +57,7 @@ for i in range(1, int(totalpage/10)+2):
         reviewerID = reviewList[i2].find('span', {'class':'a-profile-name'}).text
         productID = asin
         title = reviewList[i2].find('a', {'data-hook':'review-title'}).text[:-1]
-        content = reviewList[i2].find('span', {'data-hook':'review-body'}).text[:-1]
+        content = str(reviewList[i2].find('span', {'data-hook':'review-body'}).text[:-1])
         date = reviewList[i2].find('span', {'data-hook':'review-date'}).text
         ratings = reviewList[i2].find('span', {'class':'a-icon-alt'}).text[:3]
         result_df.ix[(i-1)*10+i2] = [productID, ratings, content, date, reviewerID, title]

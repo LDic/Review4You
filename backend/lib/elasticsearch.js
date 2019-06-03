@@ -15,11 +15,11 @@ module.exports.getSentKeyCloudQuery = function(userEmail)
 {
     return [
       {},
-      {query : {bool: {must: [{ match: { userID: userEmail } }, { match: { "summary.sentiment": "positive"} }]}}, size:0, aggs: {keyWordCloud: {terms: {field: "keyword", order: {_count: "desc"}}}}},
+      {query : {bool: {must: [{ match: { userID: userEmail } }, { match: { "summary.sentiment": "positive"} }]}}, size:0, aggs: {keyWordCloud: {terms: {field: "keyword", order: {_count: "desc"}, exclude: ""}}}},
       {},
-      {query : {bool: {must: [{ match: { userID: userEmail } }, { match: { "summary.sentiment": "neutral"} }]}}, size:0, aggs: {keyWordCloud: {terms: {field: "keyword", order: {_count: "desc"}}}}},
+      {query : {bool: {must: [{ match: { userID: userEmail } }, { match: { "summary.sentiment": "neutral"} }]}}, size:0, aggs: {keyWordCloud: {terms: {field: "keyword", order: {_count: "desc"}, exclude: ""}}}},
       {},
-      {query : {bool: {must: [{ match: { userID: userEmail } }, { match: { "summary.sentiment": "negative"} }]}}, size:0, aggs: {keyWordCloud: {terms: {field: "keyword", order: {_count: "desc"}}}}},
+      {query : {bool: {must: [{ match: { userID: userEmail } }, { match: { "summary.sentiment": "negative"} }]}}, size:0, aggs: {keyWordCloud: {terms: {field: "keyword", order: {_count: "desc"}, exclude: ""}}}},
       {},
       {
         query: {
@@ -55,7 +55,8 @@ module.exports.getSentKeyCloudQuery = function(userEmail)
           keywordSummary: {
               terms: {
               field: 'keyword',
-              order: {_count: 'desc'}
+              order: {_count: 'desc'},
+              exclude: ''
               }
           }
         }
