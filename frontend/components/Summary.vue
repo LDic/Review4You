@@ -284,40 +284,44 @@ export default {
       }, 3000)
     },
     logout() {
-      if(confirm('Do you want to Logout?')){
-        firebase.auth().signOut()
-        .then(() => {
-          this.$http.post('/auth/logout')
-        }).then((res) => {
-          //this.$router.replace('/')
-          window.location.pathname = '/'
-        })
+      if(this.show_clicked == 0) {
+        if(confirm('Do you want to Logout?')){
+          firebase.auth().signOut()
+          .then(() => {
+            this.$http.post('/auth/logout')
+          }).then((res) => {
+            //this.$router.replace('/')
+            window.location.pathname = '/'
+          })
+        }
       }
     },
 
     gotoSearch(){
       // go to search Page
       //this.$router.replace('/search')
-      window.location.pathname = '/search'
+      if(this.show_clicked == 0) {window.location.pathname = '/search'}
     },
 
     bringResults(){
-      this.show_clicked = 1
-      this.show_search = 0
-      this.axios.post('/summary')
-      .then( (res) => {
-        this.axios.post('/summary/getresult')
-        .then((resultRes) => {
-          this.summaryResult = resultRes.data
+      if(this.show_clicked == 0) {
+        this.show_clicked = 1
+        this.show_search = 0
+        this.axios.post('/summary')
+        .then( (res) => {
+          this.axios.post('/summary/getresult')
+          .then((resultRes) => {
+            this.summaryResult = resultRes.data
+          })
         })
-      })
+      }
     },
     ratings_clear() {
       return (this.summaryResult.ratings.toFixed(2))
     },
     gotoHome() {
       //this.$router.replace('/userboard')
-      window.location.pathname = '/userboard'
+      if(this.show_clicked == 0) {window.location.pathname = '/userboard'}
     },
 
     ratio_sentiment: function(sent) {
